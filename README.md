@@ -7,7 +7,7 @@
  - The algorithim is also split into 2 phases: planning/execution and improvisation/learning, trying to mimic human behavior:
      - During Planning phase the bot has a virtual representation of the game it has in it's "mind" and tries to pick a path to explore based on which path is explored the most. Reason being it's closer to knowing whether that path leads to a reward or not.
      - Bot then follows that pre-planned path and start's improvising once it hits uncharted territory.
-     - Right now the bot just selects a random action once it hit unknown states but the hope is (in the future) that it uses prior knowledge to traverse unknown states. This is a vague idea, hopefully can explore in future
+     - Right now the bot just selects a random action once it hit unknown states but the maybe in the future the bot can use it uses prior knowledge to traverse unknown states. This is a vague idea, hopefully can explore in future
      - The bot also updates it's internal representation of the world with every action it takes. So that during the planning stage it knows which states to avoid and which ones to explore
   - Although the implementation of this alorigthim is specific to this problem. I believe it has some aspects generally applicable to RL problems
   
