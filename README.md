@@ -9,4 +9,8 @@
      - Bot then follows that pre-planned path and start's improvising once it hits uncharted territory.
      - Right now the bot just selects a random action once it hit unknown states but the hope is (in the future) that it uses prior knowledge to traverse unknown states. This is a vague idea, hopefully can explore in future
      - The bot also updates it's internal representation of the world with every action it takes. So that during the planning stage it knows which states to avoid and which ones to explore
+  - Although the implementation of this alorigthim is specific to this problem. I believe it has some aspects generally applicable to RL problems
+  
+ - TODO: Prettier format
+ - TODO: Have numbers to prove my algorithim is more efficent in this case
  
