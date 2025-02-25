@@ -39,7 +39,6 @@ class FrozenLakeDQL():
     network_sync_rate = 10
     replay_memory_size = 1000
     mini_batch_size = 32
-
     loss_fn = nn.MSELoss()
     optimizer = None
 
@@ -66,6 +65,9 @@ class FrozenLakeDQL():
         rewards_per_episode = np.zeros(episodes)
         epsilon_history = []
         step_count = 0
+        total_step_count = 0
+        count_total_steps = True
+        gotAReward= False
         for i in range(episodes):
             state = env.reset()[0]
             terminated = False
@@ -79,17 +81,26 @@ class FrozenLakeDQL():
                         action = policy_dqn(self.state_to_dqn_input(state,num_states)).argmax().item()
 
                 new_state,reward,terminated,truncated,_ = env.step(action)
-                memory.append((state,action,new_state,reward,terminated))
 
+                # if(terminated) and reward == 0:
+                #     reward = -.1
+                memory.append((state,action,new_state,reward,terminated))
+                # print(f"In state {state} and took action: {action}. New state is {new_state}")
                 state = new_state
 
                 step_count += 1
-
-            if reward ==1:
+            if reward < 1 and count_total_steps:
+                total_step_count += 1
+            if reward !=0:
+                gotAReward=True
+                if reward > 0 and count_total_steps:     
+                    print(f"It took {total_step_count} steps to reach the reward")
+                    count_total_steps = False
                 rewards_per_episode[i] = reward
             
-            if len(memory)> self.mini_batch_size and np.sum(rewards_per_episode) > 0:
-
+            
+            if len(memory)> self.mini_batch_size and gotAReward:
+                # print(f'Sum of rewards is:{np.sum(rewards_per_episode)}')
                 mini_batch = memory.sample(self.mini_batch_size)
                 self.optimize(mini_batch, policy_dqn, target_dqn)
 
@@ -107,13 +118,15 @@ class FrozenLakeDQL():
         sum_rewards = np.zeros(episodes)
         for x in range(episodes):
             sum_rewards[x] = np.sum(rewards_per_episode[max(0, x-100):(x+1)]) # why is this done?
-        plt.subplot(121)
+        ax=plt.subplot(121)
+        ax.set_title("Sum of rewards")
         plt.plot(sum_rewards)
 
-        plt.subplot(122)
+        ax=plt.subplot(122)
+        ax.set_title("Epsilon History")
         plt.plot(epsilon_history)
 
-        plt.savefig('frozen_lake_dql.png')
+        plt.savefig(f'frozen_lake_dql_lr_{self.learning_rate_a}.png')
     
 
     def optimize(self, mini_batch, policy_dqn, target_dqn):
@@ -129,7 +142,7 @@ class FrozenLakeDQL():
             else:
                 with torch.no_grad():
                     target = torch.FloatTensor(
-                        reward + self.discount_factor_g* target_dqn(self.state_to_dqn_input(new_state, num_states)).mean()
+                        reward + self.discount_factor_g* target_dqn(self.state_to_dqn_input(new_state, num_states)).max()
                     )
             
             current_q = policy_dqn(self.state_to_dqn_input(state, num_states))
@@ -202,5 +215,5 @@ class FrozenLakeDQL():
 if __name__ == '__main__':
     frozenLake = FrozenLakeDQL()
     is_slippery = False
-    # frozenLake.train(1000,False)
+    frozenLake.train(1000,False)
     frozenLake.test(10) 
