@@ -24,7 +24,7 @@ The main goal of this project is to learn more about Reinforcement Learning alro
   
 The figures above are just  for reaching the reward, not fot the bot learning the path towards the reward. (Need to explore on how much they difference, i.e how many more runs after the bot reaches the reward the first time that it learns the proper path?)
   1. Bot kept falling into the same ice hole multiple times, i.e kept repeating the same mistakes
-  2. Bot not learning fast enoguh. i.e the game has 16 possible states, with 4 actions possible for each. So it should take at most 64 tries to get a path to the reward with some margin left for starting the game over when falling into a puddle.
+  2. Bot not learning fast enoguh. i.e the game has 64 possible states, with 4 actions possible for each. So it should take at most 256 tries to get a path to the reward plus some margin left for sceneroies when the bot falls into a ice hole and has to go over known states again.
 
 ## Improved Design
 [//]: <> (Describe the improved design and how it's better than the reference. Maybe also describe each compoenent and their purpose maybe even future plans for them?)
